@@ -1,424 +1,884 @@
 <!DOCTYPE html>
-
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta
-      content="Ummah United Wrestling Club helps youth and adults build strength, discipline, and faith through wrestling in Kansas City."
-      name="description"
-    />
-    <meta content="index, follow" name="robots" />
-    <link href="https://yourdomain.com/" rel="canonical" />
-    <!-- Open Graph -->
-    <meta content="Ummah United Wrestling Club" property="og:title" />
-    <meta
-      content="Wrestling with purpose – train hard, grow stronger."
-      property="og:description"
-    />
-    <meta
-      content="https://yourdomain.com/path-to-banner.jpg"
-      property="og:image"
-    />
-    <meta content="https://yourdomain.com/" property="og:url" />
-    <meta content="website" property="og:type" />
-    <!-- Twitter Card -->
-    <meta content="summary_large_image" name="twitter:card" />
-    <meta content="Ummah United Wrestling Club" name="twitter:title" />
-    <meta
-      content="Train with discipline. Grow in strength. Rise in spirit."
-      name="twitter:description"
-    />
-    <meta
-      content="https://yourdomain.com/path-to-banner.jpg"
-      name="twitter:image"
-    />
-    <link href="/favicon.ico" rel="icon" />
-    <title>Ummah United Wrestling Club</title>
-    <link href="Ummah_United_Wrestling_Club.css" rel="stylesheet" />
-    <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      .calendar-section {
-        padding: 2rem;
-        background-color: var(--gray-light);
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ummah United Wrestling — Where Wrestling Meets Purpose</title>
+  <meta name="description" content="Community-first wrestling club building discipline, resilience, and character." />
+  <meta name="theme-color" content="#0b0d10" />
+
+  <style>
+    /* ===== Base ===== */
+    /* ===== Brand palette (from logo) =====
+      Deep Green  #114B2E
+      Light Green #2FB86E
+      Purple      #6C2A83
+      DarkPurple  #3C1448
+      Red Accent  #A21C23
+      Black/White #000000 / #FFFFFF
+    */
+
+    /* root */
+    :root{
+      /* Core brand */
+      --green:#114B2E;
+      --green-2:#2FB86E;
+      --purple:#6C2A83;
+      --purple-2:#3C1448;
+      --red:#A21C23;
+      --ink:#000000;
+      --paper:#FFFFFF;
+
+      /* Site tokens (dark UI with green tint) */
+      --bg:#0b1210;          /* near-black with green bias */
+      --bg-alt:#0e1915;      /* slightly lighter for alt sections */
+      --card:#0e1512cc;      /* glassy panels */
+      --text:#eef4f1;        /* high-contrast text */
+      --muted:#b4c3bc;       /* subdued body copy */
+      --border:#1a2a23;
+
+      /* Keep your “gold” API but point it to brand purple */
+      --gold:var(--purple);      /* primary CTA start */
+      --gold-2:var(--purple-2);  /* primary CTA end */
+
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+
+    /* === Small brand-behavior tweaks === */
+    .brand span{ color:var(--green-2) }                  /* “United” pop color */
+    .nav a:hover{ background:#0f1714 }                   /* subtle greenish hover */
+    .social a:hover,.footer-links a:hover{ color:var(--green-2) }
+
+    /* Buttons */
+    .btn--gold{
+      background:linear-gradient(90deg,var(--gold),var(--gold-2));
+      color:#fff; border-color:transparent;
+    }
+    .btn--ghost{ color:#fff; border-color:#22372d }
+    .btn--ghost:hover{ background:#0f1714 }
+
+    /* Focus states */
+    .form input:focus,.form textarea:focus{
+      outline:2px solid var(--purple); border-color:var(--purple);
+    }
+
+    /* Cards & borders */
+    .card{ border:1px solid var(--border) }
+    .badge{ border:1px solid #1e3028; background:linear-gradient(90deg,var(--bg-alt),transparent) }
+
+    /* Accent option if you ever want a green CTA */
+    .btn--green{ background:linear-gradient(90deg,var(--green-2),var(--green)); color:#07110c; border-color:transparent }
+
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+      background:var(--bg); color:var(--text); line-height:1.6;
+    }
+
+    /* Utilities */
+    .container{ width:min(1100px, 92%); margin-inline:auto }
+    .row{ display:flex; align-items:center; gap:1rem }
+    .grid-2{ display:grid; grid-template-columns:1.1fr .9fr; gap:2rem }
+    @media (max-width: 900px){ .grid-2{ grid-template-columns:1fr } }
+    .h1{ font-size: clamp(2rem, 2.5rem + 2vw, 4rem); line-height:1.1; margin:0 0 .6rem }
+    .h2{ font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2.2rem); margin:0 0 .75rem }
+    .h3{ font-size: 1.15rem; margin:.25rem 0 .5rem }
+    .lead{ font-size: clamp(1rem, .9rem + .6vw, 1.25rem); color:var(--muted); max-width:60ch }
+    .link{ color:var(--text); text-decoration:underline dotted; text-underline-offset:3px }
+    .badges{ display:flex; flex-wrap:wrap; gap:.5rem; margin-top:.75rem }
+    .badge{ background:linear-gradient(90deg,var(--bg-alt),transparent); border:1px solid #1b222b; padding:.4rem .6rem; border-radius:999px; font-size:.85rem }
+
+    .btn{
+      display:inline-block; border-radius:999px; padding:.8rem 1.1rem; text-decoration:none; font-weight:600;
+      border:1px solid #2a3441; box-shadow:var(--shadow); transition:.2s transform, .2s opacity, .2s background;
+    }
+    .btn:hover{ transform:translateY(-1px) }
+    .btn--gold{ background:linear-gradient(90deg,var(--gold),var(--gold-2)); color:#1a1200; border-color:transparent }
+    .btn--ghost{ background:transparent; color:var(--text) }
+
+    /* Topbar */
+    .topbar{
+      background:#0f141a; color:var(--muted); font-size:.9rem; border-bottom:1px solid #131a22;
+    }
+    .topbar .container{ padding:.5rem 0 }
+    .topbar__item{ white-space:nowrap }
+    .topbar__spacer{ flex:1 }
+    @media screen and (max-width:500px){
+      .topbar {display:none}
+    }
+
+    /* Header / Nav */
+    .siteheader{
+      position:sticky;
+      top:0;
+      z-index:50;
+      background:rgba(11,13,16,.75);
+      backdrop-filter:saturate(140%) blur(8px);
+      border-bottom:1px solid #131a22;
+    }
+
+    /* main header row */
+    .siteheader .container.siteheader-inner{
+      padding:.6rem 0;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      min-height:72px; /* give us more vertical room than 64px */
+    }
+
+    /* LEFT SIDE: logo + text */
+    .brand-block{
+      display:flex;
+      align-items:center;
+      gap:.75rem;                /* breathing room between logo and text */
+      text-decoration:none;
+      color:var(--text);
+      font-weight:800;
+      letter-spacing:.3px;
+      line-height:1.2;
+    }
+
+    /* the logo itself */
+    .logo{
+      height:8rem;               /* <-- bigger now, actually legible */
+      width:auto;
+      border-radius:6px;
+      object-fit:contain;
+      image-rendering:auto;
+    }
+
+    /* text next to it */
+    .brand-text{
+      font-size:1.1rem;
+      color:var(--text);
+    }
+    .brand-text span{
+      color:var(--gold-2);
+    }
+
+    /* RIGHT SIDE: burger + nav links */
+    .nav-block{
+      display:flex;
+      align-items:center;
+      gap:1rem;
+    }
+
+    /* nav links styling */
+    .nav{
+      display:flex;
+      gap:.75rem;
+      align-items:center;
+    }
+    .nav a{
+      color:var(--text);
+      text-decoration:none;
+      padding:.5rem .6rem;
+      border-radius:.5rem;
+    }
+    .nav a:hover{
+      background:#12171d;
+    }
+
+    /* hamburger button */
+    .hamburger{
+      background:none;
+      border:0;
+      width:42px;
+      height:42px;
+      border-radius:.6rem;
+      position:relative;
+      display:none; /* hidden on desktop */
+    }
+    .hamburger span{
+      position:absolute;
+      left:9px;
+      right:9px;
+      height:2px;
+      background:var(--text);
+    }
+    .hamburger span:nth-child(1){ top:12px }
+    .hamburger span:nth-child(2){ top:20px }
+    .hamburger span:nth-child(3){ top:28px }
+
+    /* ====== MOBILE ====== */
+    @media (max-width:780px){
+      /* let header breathe more vertically on mobile */
+      .siteheader .container.siteheader-inner{
+        flex-wrap:wrap;                 /* allow line break */
+        row-gap:.5rem;
+        min-height:auto;
+        padding:.75rem 0 .6rem;
       }
 
-      .calendar-title {
-        text-align: center;
-        font-size: 2rem;
-        font-weight: bold;
-        margin-bottom: 2rem;
-        color: var(--primary-color);
+      /* stack brand-block and nav-block on separate "rows" visually */
+      .brand-block{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content:flex-start;
+        gap:.75rem;
+        /* bigger logo is allowed here */
       }
 
-      .schedule-calendar {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 10px;
+      .logo{
+        height:6.25rem;                    /* even BIGGER on mobile */
+        width:auto;
       }
 
-      .schedule-calendar th,
-      .schedule-calendar td {
-        border-radius: 10px;
-        padding: 0.5rem;
-        min-width: 120px;
-        height: 160px;
-        vertical-align: top;
-        background-color: var(--white);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        position: relative;
+      .brand-text{
+        font-size:1.05rem;
+        line-height:1.2;
       }
 
-      .schedule-calendar th {
-        background-color: var(--primary-color);
-        color: var(--white);
-        font-weight: bold;
-        text-align: center;
+      /* nav-block becomes full-width row aligned right */
+      .nav-block{
+        width:100%;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
       }
 
-      .schedule-calendar td:hover {
-        background-color: var(--secondary-color);
-        color: var(--white);
+      /* hamburger shows on mobile */
+      .hamburger{
+        display:inline-block;
+        order:1;
       }
 
-      .date {
-        font-weight: bold;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
+      /* nav menu turns into slide-down panel */
+      .nav{
+        position:fixed;
+        inset:64px 0 auto 0;
+        background:#0b0f14;
+        border-top:1px solid #131a22;
+        transform:translateY(-120%);
+        transition:.25s transform;
+        padding:1rem 1.25rem;
+        flex-direction:column;
+        gap:.25rem;
+        order:2;
+      }
+      .nav.open{
+        transform:translateY(0);
       }
 
-      .event {
-        font-size: 0.75rem;
-        color: var(--gray-dark);
-        list-style: disc;
-        padding-left: 1rem;
+      body.nav-open{
+        overflow:hidden;
+      }
+    }
+
+    /* optional tiny breakpoint: if logo is super detailed and text wraps ugly on tiny phones */
+    @media (max-width:380px){
+      .brand-text{
+        font-size:1rem;
+      }
+    }
+
+
+    /* Hero */
+    .hero{ position:relative; min-height:72vh; display:grid; place-items:center; }
+    .hero__img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:contrast(1.05) saturate(1.05) brightness(.8) }
+    .hero__overlay{ position:absolute; inset:0; background:radial-gradient(1200px 600px at 20% 30%, #0000, #000a), linear-gradient(#0006,#000c) }
+    .hero__content{ position:relative; padding:6rem 0 4rem; text-align:left }
+    .hero__cta{ display:flex; gap:.6rem; margin-top:1rem; flex-wrap:wrap }
+    .social{ margin-top:1rem; display:flex; gap:1rem; flex-wrap:wrap }
+    .social a{ color:var(--muted); text-decoration:none }
+    .social a:hover{ color:var(--gold-2) }
+
+    /* Sections */
+    .section{ padding:4rem 0; background:var(--bg) }
+    .section.alt{ background:var(--bg-alt) }
+
+    /* Cards */
+    .card{ background:var(--card); border:1px solid #1a222b; border-radius:16px; padding:1rem; box-shadow:var(--shadow) }
+    .card--glass{ backdrop-filter:saturate(140%) blur(8px) }
+    .cards{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1rem }
+    @media (max-width: 1000px){ .cards{ grid-template-columns:repeat(2, 1fr) } }
+    @media (max-width: 640px){ .cards{ grid-template-columns:1fr } }
+
+    /* Lists */
+    .list{ padding-left:1rem; margin:.5rem 0; }
+    .list li{ margin:.4rem 0 }
+    .list a{ color: var(--green-2)}
+    .list a:hover{ color:var(--green)}
+    .list a:visited{ color:var(--purple)}
+
+
+    /* Coach */
+    .coach-card img{ width:100%; height:auto; border-radius:12px }
+    .coach-meta{ margin-top:.6rem; color:var(--muted) }
+
+    /* Gallery */
+    .gallery{ display:grid; grid-template-columns:repeat(6, 1fr); gap:8px; }
+    .gallery img{ width:100%; height:160px; object-fit:cover; border-radius:10px; border:1px solid #1b222b }
+    @media (max-width: 1100px){ .gallery{ grid-template-columns:repeat(4,1fr) } }
+    @media (max-width: 700px){ .gallery{ grid-template-columns:repeat(3,1fr) } }
+    @media (max-width: 460px){ .gallery{ grid-template-columns:repeat(2,1fr) } }
+
+    /* Form */
+    .form{ display:grid; gap:.75rem }
+    .form label{ display:grid; gap:.35rem; font-size:.95rem }
+    .form input,.form textarea{
+      background:#0d1116; color:var(--text); border:1px solid #1a222b; border-radius:10px; padding:.8rem .9rem;
+    }
+    .form input:focus,.form textarea:focus{ outline:2px solid #213043; border-color:#213043 }
+    /* === Modal base === */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:1rem;z-index:1000;background:rgba(0,0,0,.6)}
+    .modal.open{display:flex}
+    .modal__panel{width:min(820px,96%);max-height:85vh;overflow:auto;background:var(--card);border:1px solid #1a222b;border-radius:16px;box-shadow:var(--shadow)}
+    .modal__head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1rem .5rem 1rem;border-bottom:1px solid #1a222b}
+    .modal__body{padding:1rem}
+    .modal__title{margin:0;font-size:1.25rem}
+    .modal__close{background:transparent;border:1px solid #2a3441;border-radius:10px;padding:.4rem .7rem;color:var(--text);cursor:pointer}
+    
+
+    @media (max-width: 500px) {
+      .modal{
+        padding:0;                /* no outer gap, it's full screen now */
+        align-items:stretch;
+        justify-content:stretch;
       }
 
-      .tooltip {
-        display: none;
-        position: absolute;
-        bottom: 100%;
-        left: 0;
-        background-color: var(--gray-dark);
-        color: var(--white);
-        padding: 0.5rem;
-        border-radius: 5px;
-        font-size: 0.7rem;
-        width: 220px;
-        z-index: 10;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      .modal__panel{
+        width:100%;
+        max-height:100vh;         /* take full viewport */
+        height:100vh;
+        border-radius:0;          /* square corners on mobile */
+        border:0;                 /* blend into background */
+        background:var(--bg);     /* go to full dark bg instead of translucent card */
+        display:flex;
+        flex-direction:column;
       }
 
-      .tooltip.hard { background-color: #1c0dea; }
-      .tooltip.cardio { background-color: #007acc; }
-      .tooltip.strength { background-color: #cc5500; }
-      .tooltip.mixed { background-color: #800080; }
-      .tooltip.transitions { background-color: #228b22; }
-      .tooltip.live { background-color: #8b0000; }
-      .tooltip.open { background-color: #cf08f7; }
-
-      .schedule-calendar td:hover .tooltip {
-        display: block;
+      .modal__head{
+        padding:1rem;
+        border-bottom:1px solid var(--border);
+        background:var(--card);   /* keep header slightly lifted */
+        flex-shrink:0;
       }
 
-      footer {
-        background-color: var(--black);
-        color: var(--white);
-        text-align: center;
-        padding: 1rem;
-        font-size: 0.9rem;
+      .modal__title{
+        font-size:1rem;
+        line-height:1.2;
+        margin:0;
       }
-    </style>
-  </head>
-  <body>
-    <header>
-      <div style="margin-bottom: 2rem;">
-        <strong>Email:</strong>
-        <a href="mailto:coachsayfullah@gmail.com">coachsayfullah@gmail.com</a>
-        <strong>Phone:</strong> <a href="tel:(314) 456-1130">(314) 456-1130</a>
-        <strong>Training Location:</strong
-        ><a
-          href="https://www.google.com/maps/place/8715+Holmes+Rd,+Kansas+City,+MO+64131/@38.9682619,-94.5800163,17z/data=!3m1!4b1!4m6!3m5!1s0x87c0e8b9090a3bc1:0x5942e68528558910!8m2!3d38.9682619!4d-94.5800163!16s%2Fg%2F11bw3yy9_s?entry=ttu&amp;g_ep=EgoyMDI1MDYwNC4wIKXMDSoASAFQAw%3D%3D"
-        >
-          8715 Holmes Rd Kansas City, MO 64131</a
-        >
+
+      .modal__close{
+        font-size:.9rem;
+        line-height:1.2;
+        padding:.5rem .7rem;
+      }
+
+      .modal__body{
+        padding:1rem;
+        flex:1 1 auto;
+        min-height:0;
+        overflow-y:auto;          /* scroll form content, keep header visible */
+      }
+
+      /* tighten form spacing a bit so mobile doesn't feel endless */
+      #studentsWrapper{
+        padding:1rem;
+      }
+      #studentsWrapper h4{
+        font-size:.95rem;
+      }
+
+      .btn.btn--gold,
+      .btn.btn--ghost{
+        width:100%;
+        text-align:center;
+      }
+    }
+    
+
+    /* Map */
+    .map iframe{ width:100%; height:360px; border:0; display:block }
+
+    /* Footer */
+    .sitefooter{ background:#0b0f14; border-top:1px solid #131a22; color:var(--muted) }
+    .sitefooter .container{ padding:1rem 0 }
+    .footer-links{ margin-left:auto; display:flex; gap:1rem }
+    .footer-links a{ color:var(--muted); text-decoration:none }
+    .footer-links a:hover{ color:var(--gold-2) }
+  </style>
+</head>
+<body>
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="container row">
+      <span class="topbar__item">📍 <a class="link" href="https://maps.google.com/?q=8715+Holmes+Rd,+Kansas+City,+MO+64131" target="_blank" rel="noopener">8715 Holmes Rd, Kansas City, MO 64131</a></span>
+      <span class="topbar__spacer"></span>
+      <span class="topbar__item">✉️ <a class="link" href="mailto:coachsayfullah@gmail.com">coachsayf@ummahunitedwrestling.com</a></span>
+      <span class="topbar__item">☎️ <a class="link" href="tel:+13144561130">(314) 456-1130</a></span>
+    </div>
+  </div>
+
+  <!-- Header / Nav -->
+  <header class="siteheader">
+    <div class="container siteheader-inner">
+      <!-- left group: logo + brand -->
+      <a href="#home" class="brand-block">
+        <img src="./media/Ummah United Wrestling club.JPG" class="logo" alt="Ummah United Wrestling logo">
+        <span class="brand-text">Ummah <span>United</span> Wrestling</span>
+      </a>
+
+      <!-- right group: hamburger + nav -->
+      <div class="nav-block">
+        <button class="hamburger" aria-label="Toggle menu" aria-controls="nav" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+
+        <nav id="nav" class="nav">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#programs">Programs</a>
+          <a href="#coach">Coach</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#" class="btn btn--gold" data-open="regModal">Register</a>
+        </nav>
       </div>
-      <nav class="navbar">
-        <div class="hamburger" onclick="toggleMenu()">☰</div>
-        <!--put the logo here so that it is displayed quickly-->
-        <div class="logo">
-          <a href="index.html">
-            <img
-              alt="Ummah United Wrestling Club"
-              src="Ummah United Wrestling club.JPG"
-            />
-          </a>
+    </div>
+  </header>
+  <!-- Hero -->
+  <section id="home" class="hero">
+    <div class="hero__overlay"></div>
+    <picture>
+      <source srcset="./media/hero@2x.jpg" media="(min-width: 900px)" />
+      <img src="./media/Screenshot_20250521-164052.png" alt="Wrestlers training on the mat" class="hero__img" />
+    </picture>
+
+    <div class="container hero__content">
+      <!--<h1 class="h1">Where Wrestling Meets Purpose</h1>-->
+      <p class="lead">We build stronger people and a stronger community through disciplined training, resilience, and character.</p>
+      <div class="hero__cta">
+        <a href="#contact" class="btn btn--gold">Join Now</a>
+        <a href="#programs" class="btn btn--ghost">View Programs</a>
+      </div>
+      <div class="social">
+        <a href="#" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+        <a href="#" target="_blank" rel="noopener" aria-label="Facebook">Facebook</a>
+        <a href="#" target="_blank" rel="noopener" aria-label="YouTube">YouTube</a>
+        <a href="#" target="_blank" rel="noopener" aria-label="TikTok">TikTok</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="section">
+    <div class="container grid-2">
+      <div>
+        <h2 class="h2">About the Club</h2>
+        <p>Rooted in faith-inspired values and open to all, Ummah United Wrestling is a training home for newcomers and competitive athletes. On the mat we sharpen skills; off the mat we live the lessons—discipline, integrity, and accountability.</p>
+        <div class="badges">
+          <span class="badge">Beginner Friendly</span>
+          <span class="badge">Competition Ready</span>
+          <span class="badge">Community First</span>
         </div>
-        <ul class="nav-links">
-          <li><a class="active" href="index.html">Home</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="classes.html">Classes</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="register.html">Register</a></li>
-          <li><a href="clinics.html">Clinics</a></li>
-          <li><a href="calendar.html">Calendar</a></li>
+      </div>
+      <div class="card card--glass">
+        <h3 class="h3">Quick Facts</h3>
+        <ul class="list">
+          <li>Location: South Kansas City (see map below)</li>
+          <li>Ages: Youth • High School </li>
+          <li>Private sessions available by appointment</li>
+          <li>Clinics and special events throughout the year</li>
         </ul>
-      </nav>
-    </header>
-    <main>
-      <!-- Hero Section -->
-      <!-- add group phpoto of bryce and the kids -->
-      <section class="hero">
-        <div class="hero-container">
-          <div class="hero-image">
-            <img alt="Hero image" src="Screenshot_20250521-164052.png" />
-          </div>
-          <div class="hero-text">
-            <p>
-              At Ummah United, our goal is to unite the community and build
-              stronger individuals through the discipline of wrestling — a
-              Sunnah of our Prophet ﷺ and a living metaphor for life’s
-              struggles. Wrestling demands constant effort, resilience, and
-              self-improvement, teaching lessons of perseverance, sacrifice, and
-              character that mirror the journey of striving for Jannah. Our
-              club, rooted in Islamic values but open to all who seek growth,
-              offers a space where hard work on the mat shapes success off the
-              mat — fostering community, faith, and personal excellence.
-            </p>
-            <p id="tagline">#Where Wrestling Meets Purpose.</p>
-          </div>
-          <div class="social-box">
-            <h2 class="social-heading">Follow Us For Latest Updates</h2>
-            <a
-              class="social-icon"
-              href="https://www.instagram.com/..."
-              target="_blank"
-            >
-              <i class="fab fa-instagram"></i>
-            </a>
-            <a
-              class="social-icon"
-              href="https://www.facebook.com/..."
-              target="_blank"
-            >
-              <i class="fab fa-facebook"></i>
-            </a>
-            <a
-              class="social-icon"
-              href="https://youtube.com/yourclub"
-              target="_blank"
-            >
-              <i class="fab fa-youtube"></i> Coming Soon!
-            </a>
-            <a
-              class="social-icon"
-              href="https://www.tiktok.com/..."
-              target="_blank"
-            >
-              <i class="fab fa-tiktok"></i>
-            </a>
-          </div>
-        </div>
-      </section>
+      </div>
+    </div>
+  </section>
 
-      <section class="isection-light">
-        <div class="isection-content">
-          <!-- TODO:verify he likes mission statment -->
-          <p>
-            United Ummah strives to create a United and supportive community
-            where individuals of all backgrounds can discover the passion and
-            joy of wrestling. We are dedicated to fostering a love for the
-            sport, empowering new wrestlers to grow, and challenging our
-            committed athletes to reach elite levels of performance. Through the
-            sport of wrestling, we aim to instill values of integrity,
-            accountability, honesty, commitment and hard work. We believe in the
-            power of continuous self-improvement and in shading not just skilled
-            athletes, but strong resilient individuals who carry these values
-            into all aspects of their lives.
-          </p>
+  <!-- Programs (no schedule grid by request) -->
+  <section id="programs" class="section alt">
+    <div class="container">
+      <h2 class="h2">Programs</h2>
+      <div class="cards">
+        <article class="card"><h3 class="h3">Youth (5-13)</h3><p>Movement literacy, safe fundamentals, and confidence.</p></article>
+        <article class="card"><h3 class="h3">High School (14–18)</h3><p>Technique, tactical awareness, and conditioning.</p></article>
+        <!--<article class="card"><h3 class="h3">Adult (18+)</h3><p>Fitness, skill, and camaraderie. Beginners welcome.</p></article>-->
+        <!--<article class="card"><h3 class="h3">Advanced / Competitive</h3><p>Invite-only small-group scenarios & match IQ.</p></article>-->
+        <!--<article class="card"><h3 class="h3">Private Sessions</h3><p>One-on-one coaching to accelerate progress.</p></article>-->
+      </div>
+      <div class="cta-center" style="text-align:center; margin-top:1rem;">
+        <a href="#contact" class="btn btn--gold">Register / Ask About Start Dates</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Coach -->
+  <section id="coach" class="section">
+    <div class="container grid-2">
+      <div>
+        <h2 class="h2">Coach</h2>
+        <p>Coach Sayf brings a fundamentals-first approach: master positions, master pace, master yourself. Expect strong attention to detail, conditioning that translates, and a positive room culture.</p>
+        <ul class="list">
+          <li>Technique progressions for real matches</li>
+          <li>Balanced drilling, live go’s, and situational work</li>
+          <li>Character and accountability built in</li>
+        </ul>
+      </div>
+      <div class="card card--glass coach-card">
+        <img src="./media/coach.jpg" alt="Coach leading practice" />
+        <div class="coach-meta">
+          <strong>Coach Sayf</strong>
+          <span>Head Coach • Program Director</span>
         </div>
-      </section>
-      <section class="section-dark">
-        <div class="section-content">
-          <div class="program-flex">
-            <div class="program">
-              <h2 id="class_times">Classes and times</h2>
-              <h3>Youth(Ages 11–13)</h3>
-              <ul>
-                <li>TBD</li>
-              </ul>
-              <h3>High School (Ages 14–18)</h3>
-              <ul>
-                <li>TBD</li>
-              </ul>
-              <h3>Adult Wrestling (18+)</h3>
-              <ul>
-                <li>Coming Soon!</li>
-              </ul>
-              <h3>Advanced Class (competitive)</h3>
-              <ul>
-                <li>Invite Only!</li>
-              </ul>
-              <h3>Private Session</h3>
-              <ul>
-                <li>Apointment Only!</li>
-              </ul>
-            </div>
-            <div class="program-callout" style="text-align: center;">
-              <video
-                alt="Video of kids wrestling"
-                autoplay=""
-                class="program-video"
-                controls=""
-                loop=""
-                muted=""
-                src="singleleg.mp4"
-              ></video>
-              <h3>
-                <a href="classes.html">Classes</a> FREE! until 06/20/2025. Why
-                wait? Transform you!
-              </h3>
-              <a class="program-button" href="register.html">Register Today</a>
-            </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery" class="section alt">
+    <div class="container">
+      <h2 class="h2">Gallery</h2>
+      <h3>coming soon</h3>
+      <div class="gallery">
+        <img src="./media/gallery_1.jpg" alt="Training on the mat" />
+        <img src="./media/gallery_2.jpg" alt="Drilling technique" />
+        <img src="./media/gallery_3.jpg" alt="Team huddle" />
+        <img src="./media/gallery_4.jpg" alt="Live goes" />
+        <img src="./media/gallery_5.jpg" alt="Warm-ups" />
+        <img src="./media/gallery_6.jpg" alt="Post-practice breakdown" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact / Register -->
+  <section id="contact" class="section">
+    <div class="container grid-2">
+      <div>
+        <h2 class="h2">Register & Contact</h2>
+        <p>Questions about start dates, pricing, or which program fits? Reach out — we’ll get you on the mat.</p>
+        <ul class="list">
+          <li>Email: <a href="mailto:coachsayfullah@gmail.com">coachsayf@ummahunitedwrestling.com</a></li>
+          <li>Phone: <a href="tel:+13144561130">(314) 456-1130</a></li>
+          <li>Address: <a href="https://maps.google.com/?q=8715+Holmes+Rd,+Kansas+City,+MO+64131" target="_blank" rel="noopener">8715 Holmes Rd, Kansas City, MO 64131</a></li>
+        </ul>
+        <div class="cta-row" style="display:flex; gap:.6rem; flex-wrap:wrap; margin-top:.5rem;">
+          <a href="#" class="btn btn--gold" data-open="regModal">Quick Registration Form</a>
+          <a href="mailto:coachsayfullah@gmail.com?subject=Training Inquiry — Ummah United Wrestling" class="btn btn--ghost">Email Coach</a>
+        </div>
+      </div>
+      <!-- Registration Modal -->
+      <div id="regModal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="regTitle">
+        <div class="modal__panel">
+          <div class="modal__head">
+            <h3 id="regTitle" class="modal__title">Quick Registration</h3>
+            <button class="modal__close" data-close>Close</button>
+          </div>
+
+          <div class="modal__body">
+            <!-- Netlify form -->
+            <form
+              name="quick-register"
+              method="POST"
+              data-netlify="true"
+              netlify-honeypot="bot-field"
+              class="form"
+              id="quickRegForm"
+              novalidate
+            >
+              <!-- Netlify required hidden fields -->
+              <input type="hidden" name="form-name" value="quick-register">
+              <!-- after submit, send them to pay.html -->
+              <input type="hidden" name="redirect" value="/pay.html">
+              <p style="display:none">
+                <label>Don’t fill this out if you’re human:
+                  <input name="bot-field">
+                </label>
+              </p>
+
+              <!-- Parent / Guardian info -->
+              <label class="req">Parent/Guardian Name
+                <input required name="parentName" type="text" autocomplete="name"/>
+              </label>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                <label class="req">Email
+                  <input required name="email" type="email" autocomplete="email"/>
+                </label>
+
+                <label class="req">Phone
+                  <input required name="phone" type="tel" autocomplete="tel" placeholder="(xxx) xxx-xxxx"/>
+                </label>
+              </div>
+
+              <!-- Parent Address -->
+              <label class="req">Street Address
+                <input required name="address1" type="text" autocomplete="address-line1"/>
+              </label>
+
+              <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:.6rem">
+                <label class="req">City
+                  <input required name="city" type="text" autocomplete="address-level2"/>
+                </label>
+
+                <label class="req">State
+                  <input required name="state" type="text" maxlength="2" placeholder="MO" autocomplete="address-level1"/>
+                </label>
+
+                <label class="req">ZIP
+                  <input required name="zip" type="text" inputmode="numeric" maxlength="10" autocomplete="postal-code"/>
+                </label>
+              </div>
+
+              <!-- STUDENTS -->
+              <div id="studentsWrapper" style="margin-top:1.5rem; border:1px solid var(--border); border-radius:12px; padding:1rem; background:rgba(20,30,25,.4);">
+                <h4 style="margin:.2rem 0 1rem; color:var(--text); font-size:1rem; font-weight:600;">
+                  Athlete 1
+                </h4>
+
+                <div class="student-block">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                    <label class="req">Athlete Name
+                      <input required name="studentName[]" type="text"/>
+                    </label>
+
+                    <label class="req">Age
+                      <input required name="studentAge[]" type="number" min="3" max="99"/>
+                    </label>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem; margin-top:.6rem;">
+                    <label>Gender
+                      <select name="studentGender[]">
+                        <option value="">Select…</option>
+                        <option>Male</option>
+                        <option>Female</option>
+                        <option>Prefer not to say</option>
+                      </select>
+                    </label>
+
+                    <label class="req">Class Group
+                      <select name="studentGroup[]" required>
+                        <option value="">Select…</option>
+                        <option value="youth">Youth (6–13)</option>
+                        <option value="highschool">High School (14–18)</option>
+                        <!--<option value="adult">Adult (18+)</option>-->
+                        <!--<option value="advanced">Advanced Invite</option>-->
+                      </select>
+                    </label>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem; margin-top:.6rem;">
+                    <label>Emergency Contact Name
+                      <input name="emergencyName[]" type="text"/>
+                    </label>
+
+                    <label>Emergency Phone
+                      <input name="emergencyPhone[]" type="tel" placeholder="(xxx) xxx-xxxx"/>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Add another student button -->
+              <div style="margin-top:.75rem; display:flex; flex-wrap:wrap; gap:.6rem;">
+                <button
+                  type="button"
+                  id="addStudentBtn"
+                  class="btn btn--ghost"
+                  style="border-radius:999px; font-size:.9rem; line-height:1.2; padding:.6rem .9rem;"
+                >
+                  + Add Another Athlete
+                </button>
+              </div>
+
+              <!-- Notes -->
+              <label style="margin-top:1rem;">Anything we should know?
+                <textarea name="notes" rows="4" placeholder="Allergies, previous wrestling experience, etc."></textarea>
+              </label>
+
+              <!-- Waiver agreement -->
+              <label style="display:flex;gap:.5rem;align-items:flex-start;margin-top:1rem; line-height:1.4;">
+                <input type="checkbox" name="waiver" required/>
+                <span>
+                  I agree to the Waiver &amp; Participation Terms.
+                  <!-- IMPORTANT PART: target="_blank" keeps their progress -->
+                  <a href="waiver.html" target="_blank" rel="noopener noreferrer">Read Waiver</a>
+                </span>
+              </label>
+
+              <!-- Submit / Cancel -->
+              <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.25rem">
+                <button type="submit" class="btn btn--gold" style="border-radius:999px;">
+                  Submit Registration
+                </button>
+
+                <button type="button" class="btn btn--ghost" data-close
+                  style="border-radius:999px;">
+                  Cancel
+                </button>
+              </div>
+
+            </form>
           </div>
         </div>
-      </section>
-      <section class="calendar-section">
-        <h2 class="calendar-title">Weekly Class Calendar</h2>
-        <table class="schedule-calendar">
-          <thead>
-            <tr>
-              <th>Sun</th>
-              <th>Mon</th>
-              <th>Tue</th>
-              <th>Wed</th>
-              <th>Thu</th>
-              <th>Fri</th>
-              <th>Sat</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- This section is templated. Each cell includes bullet points and a colored tooltip.
-             Below is a sample row showing one of each day-type. -->
-            <tr>
-              <td>
-                <div class="date"></div>
-                <ul class="event">
-                  <li>5:00PM Advanced
-                  </li>
-                  <li>6:30PM Advanced
-                  </li>
-                  <li>8:00PM Advanced
-                  </li>
-                </ul>
-                <div class="tooltip hard">
-                  <strong>Warm-Up:</strong> Hard Round Grit Work<br />
-                  <strong>Focus:</strong> Technique Flow
-                </div>
-              </td>
-              <td>
-                <div class="date"></div>
-                <ul class="event">
-                  <li>5:00 PM Schoolboy</li>
-                  <li>6:15 PM Youth</li>
-                  <li>7:30 PM High School</li>
-                  <li>8:45 PM Adult</li>
-                </ul>
-                <div class="tooltip cardio">
-                  <strong>Warm-Up:</strong> Cardio<br />
-                  <strong>Focus:</strong> Fundamentals
-                </div>
-              </td>
-              <td>
-                <div class="date"></div>
-                <ul class="event">
-                  <li>5:00 PM Schoolboy</li>
-                  <li>6:15 PM Youth</li>
-                  <li>7:30 PM High School</li>
-                  <li>8:45 PM Adult</li>
-                </ul>
-                <div class="tooltip strength">
-                  <strong>Warm-Up:</strong> Strength<br />
-                  <strong>Focus:</strong> Technique + Reps
-                </div>
-              </td>
-              <td>
-                <div class="date"></div>
-                <ul class="event">
-                  <li>5:00 PM Schoolboy</li>
-                  <li>6:15 PM Youth</li>
-                  <li>7:30 PM High School</li>
-                  <li>8:45 PM Adult</li>
-                </ul>
-                <div class="tooltip mixed">
-                  <strong>Warm-Up:</strong> Cardio<br />
-                  <strong>Focus:</strong> Mixed (Drill + Live)
-                </div>
-              </td>
-              <td>
-                <div class="date"></div>
-                <ul class="event">
-                  <li>5:00 PM Schoolboy</li>
-                  <li>6:15 PM Youth</li>
-                  <li>7:30 PM High School</li>
-                  <li>8:45 PM Adult</li>
-                </ul>
-                <div class="tooltip transitions">
-                  <strong>Warm-Up:</strong> Strength<br />
-                  <strong>Focus:</strong> Transitions &amp; Situations
-                </div>
-              </td>
-              <td>
-                <div class="date"></div>
-                <ul class="event">
-                  <li>5:00 PM Schoolboy</li>
-                  <li>6:15 PM Youth</li>
-                  <li>7:30 PM High School</li>
-                  <li>8:45 PM Adult</li>
-                </ul>
-                <div class="tooltip live">
-                  <strong>Warm-Up:</strong> Cardio<br />
-                  <strong>Focus:</strong> Live Scrambles &amp; Rounds
-                </div>
-              </td>
-              <td>
-                <div class="date"></div>
-                <ul class="event">
-                  <li>Open mat all levels</li>
-                </ul>
-                <div class="tooltip open">
-                  <strong>Warm-Up:</strong> Cardio<br />
-                  <strong>Focus:</strong> Open Mat All Levels
-                </div>
-              </td>
-            </tr>
-            <!-- Additional rows (8–31) are repeated programmatically with correct color-coded tooltips -->
-          </tbody>
-        </table>
-      </section>
-      <section class="section-cta">
-        <div class="cta-content">
-          <!-- TODO: Add call to action / registration prompt here -->
-          <h2>
-            Book you first session today, NO Expirience needed! For limited time
-            while spots last, NOW till 06/20/2025 classes are free.
-          </h2>
-          <a class="cta-button" href="register.html" target="_blank">Register today!</a>
-        </div>
-      </section>
-    </main>
-    <footer>
-      <p>© 2025 Ummah United Wrestling Club. All rights reserved.</p>
-    </footer>
-    <script>
-      function toggleMenu() {
-        const navLinks = document.querySelector('.nav-links');
-        navLinks.classList.toggle('open');
-      }
-    </script>
-  </body>
+      </div>
+
+
+      <script>
+        // --- modal open / close ---
+        const modal = document.getElementById('regModal');
+
+        function openModal() {
+          modal.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        }
+        function closeModal() {
+          modal.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+
+        // open triggers (Register buttons)
+        document.querySelectorAll('[data-open="regModal"]').forEach(el => {
+          el.addEventListener('click', e => {
+            e.preventDefault();
+            openModal();
+          });
+        });
+
+        // close triggers
+        modal.querySelectorAll('[data-close]').forEach(btn => {
+          btn.addEventListener('click', closeModal);
+        });
+
+        // click outside the panel closes modal
+        modal.addEventListener('click', e => {
+          if (e.target === modal) closeModal();
+        });
+
+        // ESC closes modal
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Escape' && modal.classList.contains('open')) {
+            closeModal();
+          }
+        });
+
+        // --- dynamic Add Another Athlete ---
+        const addStudentBtn = document.getElementById('addStudentBtn');
+        const studentsWrapper = document.getElementById('studentsWrapper');
+
+        let athleteCount = 1;
+
+        addStudentBtn.addEventListener('click', () => {
+          athleteCount++;
+
+          // clone block
+          const block = document.createElement('div');
+          block.style.marginTop = '1.5rem';
+          block.style.borderTop = '1px solid var(--border)';
+          block.style.paddingTop = '1.5rem';
+
+          block.innerHTML = `
+            <h4 style="margin:0 0 1rem; color:var(--text); font-size:1rem; font-weight:600;">
+              Athlete ${athleteCount}
+            </h4>
+
+            <div class="student-block">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                <label class="req">Athlete Name
+                  <input required name="studentName[]" type="text"/>
+                </label>
+
+                <label class="req">Age
+                  <input required name="studentAge[]" type="number" min="3" max="99"/>
+                </label>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem; margin-top:.6rem;">
+                <label>Gender
+                  <select name="studentGender[]">
+                    <option value="">Select…</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Prefer not to say</option>
+                  </select>
+                </label>
+
+                <label class="req">Class Group
+                  <select name="studentGroup[]" required>
+                    <option value="">Select…</option>
+                    <option value="youth">Youth (6–13)</option>
+                    <option value="highschool">High School (14–18)</option>
+                    <option value="adult">Adult (18+)</option>
+                    <option value="advanced">Advanced Invite</option>
+                  </select>
+                </label>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem; margin-top:.6rem;">
+                <label>Emergency Contact Name
+                  <input name="emergencyName[]" type="text"/>
+                </label>
+
+                <label>Emergency Phone
+                  <input name="emergencyPhone[]" type="tel" placeholder="(xxx) xxx-xxxx"/>
+                </label>
+              </div>
+            </div>
+          `;
+
+          studentsWrapper.appendChild(block);
+        });
+      </script>
+  </section>
+
+  <!-- Map -->
+  <section class="map">
+    <iframe
+      title="Ummah United Wrestling Location"
+      loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+      src="https://www.google.com/maps?q=8715+Holmes+Rd,+Kansas+City,+MO+64131&output=embed">
+    </iframe>
+  </section>
+
+  <!-- Footer -->
+  <footer class="sitefooter">
+    <div class="container row">
+      <small>© <span id="year"></span> Ummah United Wrestling Club</small>
+      <div class="footer-links">
+        <a href="#about">About</a>
+        <a href="#programs">Programs</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const burger = document.querySelector('.hamburger');
+    const nav = document.querySelector('#nav');
+    burger.addEventListener('click', () => {
+      const expanded = burger.getAttribute('aria-expanded') === 'true';
+      burger.setAttribute('aria-expanded', !expanded);
+      nav.classList.toggle('open');
+      document.body.classList.toggle('nav-open');
+    });
+
+    // Close nav on link click (mobile)
+    [...document.querySelectorAll('#nav a')].forEach(a => {
+      a.addEventListener('click', () => {
+        nav.classList.remove('open');
+        burger.setAttribute('aria-expanded', 'false');
+        document.body.classList.remove('nav-open');
+      });
+    });
+
+    // Smooth scroll (offset for sticky header)
+    [...document.querySelectorAll('a[href^="#"]')].forEach(link => {
+      link.addEventListener('click', e => {
+        const id = link.getAttribute('href').slice(1);
+        const el = document.getElementById(id);
+        if (el) {
+          e.preventDefault();
+          window.scrollTo({ top: el.offsetTop - 80, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
-
