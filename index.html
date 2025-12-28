@@ -48,6 +48,8 @@
       --gold-2:var(--purple-2);  /* primary CTA end */
 
       --shadow:0 10px 30px rgba(0,0,0,.35);
+      --topbar-h: 44px;     /* desktop topbar height */
+      --header-offset: var(--topbar-h);
     }
 
     /* === Small brand-behavior tweaks === */
@@ -84,7 +86,7 @@
     *{ box-sizing:border-box }
     html,body{ height:100% }
     body{
-      padding-top: 7.5rem;
+      padding-top: 0;
       margin:0;
       font-family:'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
       background:var(--bg);
@@ -140,6 +142,9 @@
       color:var(--muted);
       font-size:.9rem;
       border-bottom:1px solid rgba(108,42,131,0.7);
+      height: var(--topbar-h);
+      display:flex;
+      align-items:center;
     }
     .topbar .container{ padding:.5rem 0 }
     .topbar__item{ white-space:nowrap }
@@ -178,7 +183,6 @@
     /* Header / Nav */
     .siteheader{
       position:fixed;
-      top:2rem;
       left:0;
       right:0;
       z-index:50;
@@ -311,17 +315,56 @@
       border-radius:.6rem;
       position:relative;
       display:none; /* hidden on desktop */
+      cursor:pointer;
     }
+
     .hamburger span{
       position:absolute;
       left:9px;
       right:9px;
       height:2px;
       background:var(--text);
+      transition: transform .18s ease, opacity .18s ease, top .18s ease;
     }
+
     .hamburger span:nth-child(1){ top:12px }
     .hamburger span:nth-child(2){ top:20px }
     .hamburger span:nth-child(3){ top:28px }
+
+    /* OPEN STATE -> turns into X */
+    .hamburger[aria-expanded="true"] span:nth-child(1){
+      top:20px;
+      transform:rotate(45deg);
+    }
+    .hamburger[aria-expanded="true"] span:nth-child(2){
+      opacity:0;
+    }
+    .hamburger[aria-expanded="true"] span:nth-child(3){
+      top:20px;
+      transform:rotate(-45deg);
+    }
+    /* --- Hamburger "X" reliability patch --- */
+    .hamburger{
+      position:relative;     /* ensure spans position correctly */
+      z-index:3001;          /* keep it above the open nav panel */
+    }
+
+    .hamburger span{
+      display:block;
+      opacity:1;             /* force visible */
+      background:var(--text);/* keep contrast */
+    }
+
+    /* When open, force the X lines visible */
+    .hamburger[aria-expanded="true"] span:nth-child(1),
+    .hamburger[aria-expanded="true"] span:nth-child(3){
+      opacity:1;
+    }
+
+    /* If something weird is overriding, this ensures the middle truly disappears */
+    .hamburger[aria-expanded="true"] span:nth-child(2){
+      opacity:0 !important;
+    }
 
     /* ====== MOBILE ====== */
     @media (max-width:780px){
@@ -370,18 +413,37 @@
       /* nav menu turns into slide-down panel */
       .nav{
         position:fixed;
-        inset:64px 0 auto 0;
+        left:0;
+        right:0;
+
+        /* IMPORTANT: your header isn't 64px tall on mobile */
+        top: calc(2rem + 92px); /* tweak 92px up/down if needed */
+
         background:#0b0f14;
         border-top:1px solid #131a22;
-        transform:translateY(-120%);
-        transition:.25s transform;
+
+        /* closed state */
+        opacity:0;
+        pointer-events:none;
+        transform: translateY(-10px);
+        transition:.22s transform ease, .22s opacity ease;
+
         padding:1rem 1.25rem;
         flex-direction:column;
         gap:.25rem;
         order:2;
+
+        /* prevents it from dropping too far */
+        max-height: calc(100dvh - (2rem + 92px));
+        overflow:auto;
+        -webkit-overflow-scrolling: touch;
+
+        z-index:2000;
       }
       .nav.open{
-        transform:translateY(0);
+        opacity:1;
+        pointer-events:auto;
+        transform: translateY(0);
       }
 
       body.nav-open{
@@ -408,6 +470,7 @@
       text-align: center;
       overflow: hidden;
       background: #000; /* fallback */
+      padding-top: 10rem;
     }
 
     /* Background image with motion effect */
@@ -967,32 +1030,47 @@
       background:#0d1116; color:var(--text); border:1px solid #1a222b; border-radius:10px; padding:.8rem .9rem;
     }
     .form input:focus,.form textarea:focus{ outline:2px solid #213043; border-color:#213043 }
+    .form select{
+      background:#0d1116;
+      color:var(--text);
+      border:1px solid #1a222b;
+      border-radius:10px;
+      padding:.8rem .9rem;
+      width:100%;
+      max-width:100%;
+    }
     /* === Modal base === */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;padding:1rem;z-index:1000;background:rgba(0,0,0,.6)}
+    .modal{position:fixed;inset:0;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;z-index:5000;background:rgba(0,0,0,.6); overflow: auto;}
     .modal.open{display:flex}
-    .modal__panel{width:min(820px,96%);max-height:85vh;overflow:auto;background:var(--card);border:1px solid #1a222b;border-radius:16px;box-shadow:var(--shadow)}
+    .modal__panel{width:min(820px,96%);overflow:auto;background:var(--card);border:1px solid #1a222b;border-radius:16px;box-shadow:var(--shadow); margin:auto; max-height: calc(100vh - 4rem)}
     .modal__head{display:flex;align-items:center;justify-content:space-between;padding:1rem 1rem .5rem 1rem;border-bottom:1px solid #1a222b}
     .modal__body{padding:1rem}
     .modal__title{margin:0;font-size:1.25rem}
     .modal__close{background:transparent;border:1px solid #2a3441;border-radius:10px;padding:.4rem .7rem;color:var(--text);cursor:pointer}
     
 
-    @media (max-width: 500px) {
+    @media (max-width: 780px) {
       .modal{
-        padding:0;                /* no outer gap, it's full screen now */
-        align-items:stretch;
-        justify-content:stretch;
+        padding:1rem;                /* no outer gap, it's full screen now */
+        align-items:center;
+        justify-content:center;
+        overflow: auto;
+        
       }
 
       .modal__panel{
-        width:100%;
-        max-height:100vh;         /* take full viewport */
-        height:100vh;
-        border-radius:0;          /* square corners on mobile */
+        width:min(40rem, 92vw);
+        max-width: 92vw;
+        max-height:100dvh;         /* take full viewport */
+        height:auto;
+        
+        margin: 0;
+        border-radius:1rem;          /* square corners on mobile */
         border:0;                 /* blend into background */
         background:var(--bg);     /* go to full dark bg instead of translucent card */
         display:flex;
         flex-direction:column;
+        overflow: hidden;
       }
 
       .modal__head{
@@ -1015,10 +1093,13 @@
       }
 
       .modal__body{
-        padding:1rem;
-        flex:1 1 auto;
+        
+        
         min-height:0;
-        overflow-y:auto;          /* scroll form content, keep header visible */
+        overflow-y:auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+                                /* scroll form content, keep header visible */
       }
 
       /* tighten form spacing a bit so mobile doesn't feel endless */
@@ -1034,7 +1115,13 @@
         width:100%;
         text-align:center;
       }
+      #regModal .modal__panel{ overflow-x:hidden; }
+
+      #regModal form div[style*="display:grid"]{
+        grid-template-columns:1fr !important;
+      }
     }
+  
     
 
     /* Mobile Sticky CTA Bar */
@@ -1167,6 +1254,51 @@
     .footer-links a{ color:var(--muted); text-decoration:none }
     .footer-links a:hover{ color:var(--gold-2) }
 
+    @media (max-width:780px){
+      .sitefooter .row{
+        flex-direction:column;
+        align-items:center;
+        gap:.6rem;
+        text-align:center;
+      }
+
+      .footer-links{
+        margin-left:0;                 /* kills the desktop push-right behavior */
+        justify-content:center;
+        flex-wrap:wrap;
+        gap:.75rem;
+      }
+
+      /* optional: give footer breathing room above the sticky CTA bar */
+      .sitefooter .container{
+        padding-bottom:90px;           /* adjust if your CTA bar height changes */
+      }
+    }
+
+    .powered-by{
+      font-size:.75rem;
+      color:var(--muted);
+      opacity:.8;
+    }
+
+    .powered-by a{
+      color:var(--green-2);
+      text-decoration:none;
+      font-weight:600;
+    }
+
+    .powered-by a:hover{
+      color:var(--purple);
+      text-decoration:underline;
+    }
+
+    @media (max-width:780px){
+    .powered-by{
+      margin-top:.25rem;
+      text-align:center;
+    }
+  }
+
     /* Scroll reveal base */
     .reveal {
       opacity:0;
@@ -1244,7 +1376,7 @@
           <a href="#programs">Programs</a>
           <a href="#coach">Coach</a>
           <a href="#gallery">Gallery</a>
-          <a href="#" class="btn btn--gold" data-open="regModal">Register</a>
+          <a href="#contact" class="btn btn--gold" data-open="regModal">Register</a>
         </nav>
       </div>
     </div>
@@ -1777,8 +1909,10 @@
 
 
       <script>
+      document.addEventListener('DOMContentLoaded', () => {
         // --- modal open / close ---
         const modal = document.getElementById('regModal');
+        if (!modal) return;
 
         function openModal() {
           modal.classList.add('open');
@@ -1789,7 +1923,7 @@
           document.body.style.overflow = '';
         }
 
-        // open triggers (Register buttons)
+        // open triggers (Register buttons) — now includes the mobile CTA too
         document.querySelectorAll('[data-open="regModal"]').forEach(el => {
           el.addEventListener('click', e => {
             e.preventDefault();
@@ -1820,67 +1954,70 @@
 
         let athleteCount = 1;
 
-        addStudentBtn.addEventListener('click', () => {
-          athleteCount++;
+        if (addStudentBtn && studentsWrapper) {
+          addStudentBtn.addEventListener('click', () => {
+            athleteCount++;
 
-          // clone block
-          const block = document.createElement('div');
-          block.style.marginTop = '1.5rem';
-          block.style.borderTop = '1px solid var(--border)';
-          block.style.paddingTop = '1.5rem';
+            const block = document.createElement('div');
+            block.style.marginTop = '1.5rem';
+            block.style.borderTop = '1px solid var(--border)';
+            block.style.paddingTop = '1.5rem';
 
-          block.innerHTML = `
-            <h4 style="margin:0 0 1rem; color:var(--text); font-size:1rem; font-weight:600;">
-              Athlete ${athleteCount}
-            </h4>
+            block.innerHTML = `
+              <h4 style="margin:0 0 1rem; color:var(--text); font-size:1rem; font-weight:600;">
+                Athlete ${athleteCount}
+              </h4>
 
-            <div class="student-block">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
-                <label class="req">Athlete Name
-                  <input required name="studentName[]" type="text"/>
-                </label>
+              <div class="student-block">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+                  <label class="req">Athlete Name
+                    <input required name="studentName[]" type="text"/>
+                  </label>
 
-                <label class="req">Age
-                  <input required name="studentAge[]" type="number" min="3" max="99"/>
-                </label>
+                  <label class="req">Age
+                    <input required name="studentAge[]" type="number" min="3" max="99"/>
+                  </label>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem; margin-top:.6rem;">
+                  <label>Gender
+                    <select name="studentGender[]">
+                      <option value="">Select…</option>
+                      <option>Male</option>
+                      <option>Female</option>
+                      <option>Prefer not to say</option>
+                    </select>
+                  </label>
+
+                  <label class="req">Class Group
+                    <select name="studentGroup[]" required>
+                      <option value="">Select…</option>
+                      <option value="youth">Youth (5–13)</option>
+                      <option value="highschool">High School (14–18)</option>
+                      <option value="adult">Adult (18+)</option>
+                      <option value="advanced">Advanced Invite</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem; margin-top:.6rem;">
+                  <label>Emergency Contact Name
+                    <input name="emergencyName[]" type="text"/>
+                  </label>
+
+                  <label>Emergency Phone
+                    <input name="emergencyPhone[]" type="tel" placeholder="(xxx) xxx-xxxx"/>
+                  </label>
+                </div>
               </div>
+            `;
 
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem; margin-top:.6rem;">
-                <label>Gender
-                  <select name="studentGender[]">
-                    <option value="">Select…</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                    <option>Prefer not to say</option>
-                  </select>
-                </label>
-
-                <label class="req">Class Group
-                  <select name="studentGroup[]" required>
-                    <option value="">Select…</option>
-                    <option value="youth">Youth (5–13)</option>
-                    <option value="highschool">High School (14–18)</option>
-                    <option value="adult">Adult (18+)</option>
-                    <option value="advanced">Advanced Invite</option>
-                  </select>
-                </label>
-              </div>
-
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem; margin-top:.6rem;">
-                <label>Emergency Contact Name
-                  <input name="emergencyName[]" type="text"/>
-                </label>
-
-                <label>Emergency Phone
-                  <input name="emergencyPhone[]" type="tel" placeholder="(xxx) xxx-xxxx"/>
-                </label>
-              </div>
-            </div>
-          `;
-
-          studentsWrapper.appendChild(block);
-        });
+            studentsWrapper.appendChild(block);
+          });
+        }
+      });
       </script>
+    </div>
   </section>
 
   <!-- Mobile Sticky Action Bar -->
@@ -1970,19 +2107,31 @@
         <a href="#programs">Programs</a>
         <a href="#contact">Contact</a>
       </div>
+      <div class="powered-by">
+      <span>Powered by</span>
+      <a href="https://nexulorum.com" target="_blank" rel="noopener noreferrer">
+        Nexulorum
+      </a>
+    </div>
     </div>
   </footer>
 
   <script>
-    // Mobile nav toggle
-    const burger = document.querySelector('.hamburger');
-    const nav = document.querySelector('#nav');
-    burger.addEventListener('click', () => {
-      const expanded = burger.getAttribute('aria-expanded') === 'true';
-      burger.setAttribute('aria-expanded', !expanded);
-      nav.classList.toggle('open');
-      document.body.classList.toggle('nav-open');
-    });
+     // Mobile nav toggle
+      const burger = document.querySelector('.hamburger');
+      const nav = document.querySelector('#nav');
+
+      burger.addEventListener('click', () => {
+        const expanded = burger.getAttribute('aria-expanded') === 'true';
+        const next = !expanded;
+
+        // force the attribute to be the exact string "true"/"false"
+        burger.setAttribute('aria-expanded', next ? 'true' : 'false');
+
+        // keep classes synced with the state
+        nav.classList.toggle('open', next);
+        document.body.classList.toggle('nav-open', next);
+      });
 
     // Close nav on link click (mobile)
     [...document.querySelectorAll('#nav a')].forEach(a => {
@@ -2133,7 +2282,7 @@
     setActiveLink();
     // Scroll reveal for sections & key cards
     const revealTargets = document.querySelectorAll(
-      '.section, .card--program, .value-card, .testimonial'
+      '.card--program, .value-card, .testimonial'
     );
 
     // Apply base class
